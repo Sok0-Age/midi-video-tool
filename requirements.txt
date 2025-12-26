@@ -1,5 +1,5 @@
 streamlit
-mido
+mido==1.3.2
 numpy
 moviepy
 opencv-python-headless

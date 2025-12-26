@@ -74,9 +74,26 @@ if midi_file:
             if msg.type == "note_on" and msg.velocity > 0:
                 note_times.append(current_time)
 
+        # ノート間隔の平均を使って最後を補う
+        if len(note_times) >= 1:
+            if len(note_times) >= 2:
+                last_interval = note_times[-1] - note_times[-2]
+            else:
+                last_interval = 0.5  # 単音MIDIの保険
+
+            note_times.append(note_times[-1] + last_interval)
+
         st.success(f"ノート数: {len(note_times)}")
         st.session_state["note_times"] = note_times
         st.session_state["midi_loaded"] = True
+
+        st.subheader("デバッグ：MIDIノート時間")
+
+        st.write("ノート数:", len(note_times))
+        st.write("最初の5ノート:", note_times[:5])
+        st.write("最後のノート:", note_times[-1])
+        midi_duration_est = note_times[-1]
+        st.write("MIDI想定再生時間（秒）:", midi_duration_est)
 
 
 # ------------------------------------------------------------
@@ -109,6 +126,17 @@ if video_file and st.session_state.get("midi_loaded"):
 
         cap = cv2.VideoCapture(temp_video.name)
         fps = cap.get(cv2.CAP_PROP_FPS)
+        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        st.subheader("デバッグ：動画情報")
+        st.write("動画FPS:", fps)
+        st.write("総フレーム数:", frame_count)
+        if fps > 0:
+            st.write("動画長さ（秒）:", frame_count / fps)
+        else:
+            st.warning("FPS が取得できません。30FPSとして扱います。")
+            fps = 30
+
         w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 

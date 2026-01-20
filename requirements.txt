@@ -1,4 +1,5 @@
 streamlit
 pretty_midi
-opencv-python
+moviepy
 numpy
+opencv-python-headless

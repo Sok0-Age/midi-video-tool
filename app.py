@@ -96,26 +96,25 @@ if video_file and st.session_state.get("midi_ready"):
         # ノート間隔 → フレーム数に変換
         note_frames = []
         accum_error = 0.0
-
-        for i in range(len(note_times)):
-            if i < len(note_times) - 1:
-                duration = note_times[i + 1] - note_times[i]
+        
+        for i in range(len(notes)):
+        
+            if i < len(notes) - 1:
+                # 次のノートまで
+                duration = notes[i+1].start - notes[i].start
             else:
-                if len(note_times) >= 2:
-                    duration = note_times[-1] - note_times[-2]
-                    duration *= LAST_NOTE_MULTIPLIER  # ★ 最後だけ長くする
-                else:
-                    duration = 0.5  # 保険（ほぼ使われない）
-
+                # ★ 最後のノートは「実際の長さ」
+                duration = notes[i].end - notes[i].start
+        
             exact_frames = duration * fps
             base_frames = int(exact_frames)
             frac = exact_frames - base_frames
-
+        
             accum_error += frac
             if accum_error >= 1.0:
                 base_frames += 1
                 accum_error -= 1.0
-
+        
             note_frames.append(base_frames)
 
         def should_flip(i):

@@ -27,7 +27,7 @@ if midi_file:
         for i, inst in enumerate(pm.instruments)
     ]
 
-    selected_track = st.selectbox(
+    selected_track = st.radio(
         "使用するトラック",
         range(len(track_labels)),
         format_func=lambda i: track_labels[i]

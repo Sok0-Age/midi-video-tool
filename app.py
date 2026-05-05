@@ -80,11 +80,11 @@ if video_file and st.session_state.get("midi_ready"):
         w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    total_source_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    
-    # ★ 最後のフレームを1回だけ取得
-    cap.set(cv2.CAP_PROP_POS_FRAMES, total_source_frames - 1)
-    ret, last_frame = cap.read()
+        total_source_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        
+        # ★ 最後のフレームを1回だけ取得
+        cap.set(cv2.CAP_PROP_POS_FRAMES, total_source_frames - 1)
+        ret, last_frame = cap.read()
             
         out_path = tempfile.NamedTemporaryFile(
             delete=False, suffix=".mp4").name

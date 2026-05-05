@@ -81,7 +81,14 @@ if video_file and st.session_state.get("midi_ready"):
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         total_source_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
+        # ★ 最後のフレームを取得
+        if source_frame_index < total_source_frames:
+            cap.set(cv2.CAP_PROP_POS_FRAMES, source_frame_index)
+            ret, frame = cap.read()
+        else:
+            # ★ 足りなくなったら最後のフレーム固定
+            frame = last_frame.copy()
+            
         out_path = tempfile.NamedTemporaryFile(
             delete=False, suffix=".mp4").name
         out = cv2.VideoWriter(
